@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Trip to the Zoo - Bahasa Inggris Kelas 6 SD</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Fredoka untuk judul ceria & Plus Jakarta Sans untuk teks yang sangat mudah dibaca di HP -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f0fdf4; /* Latar hijau sangat lembut bertema alam/kebun binatang */
+            -webkit-tap-highlight-color: transparent;
+        }
+        h1, h2, h3, .font-display {
+            font-family: 'Fredoka', sans-serif;
+        }
+        /* Animasi tombol suara saat diklik */
+        .speak-card {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+        .speak-card:active {
+            transform: scale(0.96);
+        }
+        .speaking-active {
+            border-color: #f59e0b !important;
+            background-color: #fef3c7 !important;
+            box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.25);
+        }
+        /* Sembunyikan scrollbar horizontal pada tab navigasi namun tetap bisa di-scroll */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        /* Animasi gelombang suara */
+        @keyframes pulse-ring {
+            0% { transform: scale(0.8); opacity: 0.8; }
+            100% { transform: scale(1.4); opacity: 0; }
+        }
+        .animate-wave {
+            animation: pulse-ring 1s infinite;
+        }
+    </style>
+</head>
+<body class="text-slate-800 pb-24">
+
+    <!-- Header / Banner Atas -->
+    <header class="bg-gradient-to-br from-emerald-600 via-green-600 to-teal-700 text-white rounded-b-3xl shadow-lg sticky top-0 z-40">
+        <div class="max-w-3xl mx-auto px-4 pt-4 pb-3">
+            <div class="flex items-center justify-between gap-2">
+                <div>
+                    <span class="inline-block bg-amber-400 text-amber-950 text-xs font-bold px-2.5 py-0.5 rounded-full mb-1 shadow-sm">
+                        Kelas VI SD • Chapter 3
+                    </span>
+                    <h1 class="text-xl sm:text-2xl font-bold tracking-wide flex items-center gap-2">
+                        🦁 A Trip to the Zoo
+                    </h1>
+                </div>
+                <!-- Kontrol Kecepatan Suara untuk Siswa -->
+                <button id="speedToggle" onclick="toggleSpeechRate()" class="bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/30 rounded-2xl px-3 py-1.5 text-xs font-semibold flex items-center gap-1.5 transition">
+                    <i data-lucide="gauge" class="w-4 h-4 text-amber-300"></i>
+                    <span id="speedLabel">Suara: Normal</span>
+                </button>
+            </div>
+
+            <!-- Petunjuk Singkat -->
+            <p class="text-emerald-100 text-xs mt-1.5 flex items-center gap-1">
+                <i data-lucide="volume-2" class="w-3.5 h-3.5 text-amber-300 shrink-0"></i>
+                Ketuk kartu atau kalimat berbahasa Inggris untuk mendengarkan pengucapannya!
+            </p>
+        </div>
+
+        <!-- Navigasi Tab Pendekatan Pembelajaran Mendalam (Deep Learning) -->
+        <nav class="max-w-3xl mx-auto px-3 pb-3">
+            <div class="grid grid-cols-4 gap-1.5 bg-emerald-900/40 p-1.5 rounded-2xl backdrop-blur-sm">
+                <button onclick="switchTab('bermakna')" id="tab-bermakna" class="tab-btn active-tab flex flex-col sm:flex-row items-center justify-center gap-1 py-2 px-1 rounded-xl text-xs font-bold transition bg-white text-emerald-800 shadow">
+                    <span class="text-base">🌱</span>
+                    <span>1. Bermakna</span>
+                </button>
+                <button onclick="switchTab('memahami')" id="tab-memahami" class="tab-btn flex flex-col sm:flex-row items-center justify-center gap-1 py-2 px-1 rounded-xl text-xs font-bold transition text-emerald-100 hover:bg-white/10">
+                    <span class="text-base">🧠</span>
+                    <span>2. Memahami</span>
+                </button>
+                <button onclick="switchTab('aplikasi')" id="tab-aplikasi" class="tab-btn flex flex-col sm:flex-row items-center justify-center gap-1 py-2 px-1 rounded-xl text-xs font-bold transition text-emerald-100 hover:bg-white/10">
+                    <span class="text-base">🧭</span>
+                    <span>3. Jelajah</span>
+                </button>
+                <button onclick="switchTab('refleksi')" id="tab-refleksi" class="tab-btn flex flex-col sm:flex-row items-center justify-center gap-1 py-2 px-1 rounded-xl text-xs font-bold transition text-emerald-100 hover:bg-white/10">
+                    <span class="text-base">🌟</span>
+                    <span>4. Refleksi</span>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Toast Notifikasi Suara (Muncul saat teks dibacakan) -->
+    <div id="speechBanner" class="fixed bottom-4 left-4 right-4 max-w-md mx-auto bg-slate-900/95 text-white px-4 py-3 rounded-2xl shadow-2xl z-50 transform translate-y-24 opacity-0 transition-all duration-300 flex items-center justify-between border border-amber-400/50">
+        <div class="flex items-center gap-3 overflow-hidden">
+            <div class="w-9 h-9 rounded-full bg-amber-500 text-slate-950 flex items-center justify-center shrink-0 relative">
+                <span class="absolute inset-0 rounded-full bg-amber-400 animate-wave"></span>
+                <i data-lucide="volume-2" class="w-5 h-5 relative z-10"></i>
+            </div>
+            <div class="truncate">
+                <p class="text-[10px] uppercase tracking-wider text-amber-300 font-bold">Sedang Mengucapkan:</p>
+                <p id="speakingTextDisplay" class="text-sm font-semibold truncate">A zoo is a place...</p>
+            </div>
+        </div>
+        <button onclick="stopSpeech()" class="ml-2 p-1.5 bg-white/10 hover:bg-white/20 rounded-xl text-xs font-bold text-rose-300">
+            Stop
+        </button>
+    </div>
+
+    <!-- KONTEN UTAMA -->
+    <main class="max-w-3xl mx-auto px-4 pt-5 space-y-6">
+
+        <!-- ========================================================= -->
+        <!-- TAHAP 1: PEMBELAJARAN BERMAKNA (MEANINGFUL LEARNING)      -->
+        <!-- ========================================================= -->
+        <section id="section-bermakna" class="tab-content space-y-5">
+            <!-- Kartu Pemantik Pengalaman Nyata -->
+            <div class="bg-white rounded-3xl p-5 shadow-sm border border-emerald-100">
+                <div class="flex items-center gap-2.5 mb-3">
+                    <span class="w-10 h-10 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center text-xl">🦒</span>
+                    <div>
+                        <h2 class="text-lg font-bold text-emerald-900">Mengapa Belajar Ini Bermakna?</h2>
+                        <p class="text-xs text-slate-500">Menghubungkan materi dengan pengalaman liburanmu</p>
+                    </div>
+                </div>
+                <p class="text-sm text-slate-600 leading-relaxed mb-4">
+                    Pernahkah kamu berkunjung ke kebun binatang bersama keluarga? Bayangkan kamu bertemu turis asing atau tersesat mencari kandang singa. Dengan menguasai materi ini, kamu bisa <strong>menjelaskan informasi hewan</strong> dan <strong>memberi petunjuk arah</strong> dengan percaya diri!
+                </p>
+
+                <!-- Tujuan Pembelajaran Interaktif -->
+                <div class="bg-emerald-50/80 rounded-2xl p-4 border border-emerald-200/70">
+                    <h3 class="text-sm font-bold text-emerald-800 mb-2.5 flex items-center gap-1.5">
+                        <i data-lucide="target" class="w-4 h-4 text-emerald-600"></i>
+                        Target Belajarmu Hari Ini:
+                    </h3>
+                    <ul class="space-y-2 text-xs sm:text-sm text-slate-700">
+                        <li class="flex items-start gap-2">
+                            <span class="text-emerald-600 font-bold">✓</span>
+                            <span>Memahami informasi & fakta tentang hewan di kebun binatang (<em>Zoo</em>).</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-emerald-600 font-bold">✓</span>
+                            <span>Meminta dan memberikan petunjuk arah sederhana (<em>Asking & Giving Directions</em>).</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-emerald-600 font-bold">✓</span>
+                            <span>Menggunakan kosakata tempat, kata kerja, dan posisi tempat dengan tepat.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Pengertian Zoo (Klik untuk Bersuara) -->
+            <div class="bg-white rounded-3xl p-5 shadow-sm border border-emerald-100">
+                <span class="text-xs font-bold uppercase tracking-wider text-teal-600 bg-teal-50 px-3 py-1 rounded-full">Konsep Dasar</span>
+                <h3 class="text-lg font-bold text-slate-800 mt-2 mb-3">What is a Zoo? (Apa itu Kebun Binatang?)</h3>
+                
+                <div onclick="speakText('A zoo is a place where many animals live and are cared for.', this)" class="speak-card bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-200 rounded-2xl p-4 relative">
+                    <div class="flex items-start justify-between gap-3">
+                        <div>
+                            <p class="text-base sm:text-lg font-bold text-slate-900 leading-snug">
+                                "A zoo is a place where many animals live and are cared for."
+                            </p>
+                            <p class="text-xs sm:text-sm text-slate-600 mt-1.5 italic">
+                                Artinya: Kebun binatang adalah tempat berbagai hewan dipelihara dan dirawat.
+                            </p>
+                        </div>
+                        <span class="w-10 h-10 rounded-full bg-amber-400 text-amber-950 flex items-center justify-center shrink-0 shadow-sm">
+                            <i data-lucide="volume-2" class="w-5 h-5"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nilai Moral / Karakter (Remember!) -->
+            <div class="bg-gradient-to-br from-rose-50 to-amber-50 rounded-3xl p-5 border-2 border-rose-200 shadow-sm">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-xl">🐼❤️</span>
+                    <h3 class="text-base font-bold text-rose-800">Pesan Bermakna (Remember!)</h3>
+                </div>
+                <div onclick="speakText('Animals are our friends. We must love and protect them.', this)" class="speak-card bg-white/90 rounded-2xl p-4 border border-rose-200 flex items-center justify-between gap-3">
+                    <div>
+                        <p class="font-bold text-slate-800 text-sm sm:text-base">"Animals are our friends. We must love and protect them."</p>
+                        <p class="text-xs text-slate-500 mt-1">(Hewan adalah teman kita. Kita harus menyayangi dan melindungi mereka.)</p>
+                    </div>
+                    <button class="w-9 h-9 rounded-full bg-rose-500 text-white flex items-center justify-center shrink-0">
+                        <i data-lucide="volume-2" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+
+            <button onclick="switchTab('memahami')" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-2xl shadow-md flex items-center justify-center gap-2 transition">
+                <span>Lanjut ke Tahap 2: Memahami Materi</span>
+                <i data-lucide="arrow-right" class="w-5 h-5"></i>
+            </button>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- TAHAP 2: MEMAHAMI KONSEP & KOSAKATA (UNDERSTANDING)       -->
+        <!-- ========================================================= -->
+        <section id="section-memahami" class="tab-content hidden space-y-6">
+            
+            <!-- Sub-menu Filter Kategori agar tidak terlalu panjang di HP -->
+            <div class="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+                <button onclick="filterVocab('places')" id="btn-places" class="vocab-filter px-4 py-2 rounded-full text-xs font-bold bg-emerald-600 text-white shrink-0 shadow-sm">📍 Places in the Zoo</button>
+                <button onclick="filterVocab('directions')" id="btn-directions" class="vocab-filter px-4 py-2 rounded-full text-xs font-bold bg-white text-slate-600 border border-slate-200 shrink-0">🧭 Directions & Prepositions</button>
+                <button onclick="filterVocab('vocab')" id="btn-vocab" class="vocab-filter px-4 py-2 rounded-full text-xs font-bold bg-white text-slate-600 border border-slate-200 shrink-0">📖 Vocabulary & Verbs</button>
+                <button onclick="filterVocab('animals')" id="btn-animals" class="vocab-filter px-4 py-2 rounded-full text-xs font-bold bg-white text-slate-600 border border-slate-200 shrink-0">🐘 Animal Facts</button>
+            </div>
+
+            <!-- KATEGORI A: PLACES IN THE ZOO -->
+            <div id="cat-places" class="vocab-category space-y-3">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-lg font-bold text-emerald-900">Places in the Zoo (Tempat di Kebun Binatang)</h2>
+                    <span class="text-xs text-emerald-700 font-semibold bg-emerald-100 px-2.5 py-1 rounded-full">10 Tempat</span>
+                </div>
+                <div id="places-grid" class="grid grid-cols-2 sm:grid-cols-2 gap-3">
+                    <!-- Diisi oleh JS -->
+                </div>
+            </div>
+
+            <!-- KATEGORI B: DIRECTIONS & PREPOSITIONS -->
+            <div id="cat-directions" class="vocab-category hidden space-y-5">
+                <!-- Giving Directions -->
+                <div class="bg-white rounded-3xl p-4 sm:p-5 shadow-sm border border-emerald-100">
+                    <h3 class="text-base font-bold text-amber-700 mb-1 flex items-center gap-2">
+                        <i data-lucide="signpost" class="w-5 h-5"></i> Giving Directions (Memberi Petunjuk Arah)
+                    </h3>
+                    <p class="text-xs text-slate-500 mb-3">Ketuk untuk mendengar cara pengucapannya:</p>
+                    <div id="directions-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                        <!-- Diisi oleh JS -->
+                    </div>
+                </div>
+
+                <!-- Prepositions of Place -->
+                <div class="bg-white rounded-3xl p-4 sm:p-5 shadow-sm border border-emerald-100">
+                    <h3 class="text-base font-bold text-teal-700 mb-1 flex items-center gap-2">
+                        <i data-lucide="map-pin" class="w-5 h-5"></i> Prepositions of Place (Kata Depan Tempat)
+                    </h3>
+                    <p class="text-xs text-slate-500 mb-3">Menjelaskan posisi kandang atau tempat:</p>
+                    <div id="prepositions-grid" class="grid grid-cols-2 gap-2.5">
+                        <!-- Diisi oleh JS -->
+                    </div>
+                </div>
+
+                <!-- Dialog Asking & Responding -->
+                <div class="bg-gradient-to-br from-sky-50 to-indigo-50 rounded-3xl p-4 sm:p-5 border border-sky-200">
+                    <h3 class="text-base font-bold text-sky-900 mb-3 flex items-center gap-2">
+                        <i data-lucide="message-circle" class="w-5 h-5 text-sky-600"></i> Contoh Percakapan (Asking & Responding)
+                    </h3>
+                    <div id="dialog-list" class="space-y-2.5">
+                        <!-- Diisi oleh JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- KATEGORI C: VOCABULARY & VERBS -->
+            <div id="cat-vocab" class="vocab-category hidden space-y-5">
+                <div class="bg-white rounded-3xl p-4 sm:p-5 shadow-sm border border-emerald-100">
+                    <h3 class="text-base font-bold text-indigo-800 mb-3">📖 Zoo Vocabulary (Kosakata Umum)</h3>
+                    <div id="general-vocab-grid" class="grid grid-cols-2 gap-2.5">
+                        <!-- Diisi oleh JS -->
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-3xl p-4 sm:p-5 shadow-sm border border-emerald-100">
+                    <h3 class="text-base font-bold text-emerald-800 mb-3">🏃 Action Verbs (Kata Kerja Aktivitas)</h3>
+                    <div id="verbs-grid" class="grid grid-cols-2 gap-2.5">
+                        <!-- Diisi oleh JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- KATEGORI D: ANIMAL FACTS & SIMPLE PRESENT -->
+            <div id="cat-animals" class="vocab-category hidden space-y-4">
+                <div class="bg-white rounded-3xl p-5 shadow-sm border border-emerald-100 space-y-4">
+                    <h3 class="text-base font-bold text-emerald-900">1. Pengelompokan Hewan Berdasarkan Makanan</h3>
+                    <div class="space-y-2.5">
+                        <div onclick="speakText('Herbivores eat plants.', this)" class="speak-card p-3.5 rounded-2xl bg-green-50 border border-green-200 flex items-center justify-between">
+                            <div>
+                                <span class="font-bold text-green-800 text-sm">🌿 Herbivores → eat plants</span>
+                                <p class="text-xs text-slate-600">Hewan pemakan tumbuhan (contoh: gajah, jerapah).</p>
+                            </div>
+                            <i data-lucide="volume-2" class="w-5 h-5 text-green-600 shrink-0"></i>
+                        </div>
+                        <div onclick="speakText('Carnivores eat meat.', this)" class="speak-card p-3.5 rounded-2xl bg-rose-50 border border-rose-200 flex items-center justify-between">
+                            <div>
+                                <span class="font-bold text-rose-800 text-sm">🥩 Carnivores → eat meat</span>
+                                <p class="text-xs text-slate-600">Hewan pemakan daging (contoh: singa, harimau, buaya).</p>
+                            </div>
+                            <i data-lucide="volume-2" class="w-5 h-5 text-rose-600 shrink-0"></i>
+                        </div>
+                        <div onclick="speakText('Omnivores eat plants and meat.', this)" class="speak-card p-3.5 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-between">
+                            <div>
+                                <span class="font-bold text-amber-800 text-sm">🍎🥩 Omnivores → eat plants and meat</span>
+                                <p class="text-xs text-slate-600">Hewan pemakan tumbuhan dan daging (contoh: beruang, monyet).</p>
+                            </div>
+                            <i data-lucide="volume-2" class="w-5 h-5 text-amber-600 shrink-0"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mendeskripsikan Hewan -->
+                <div class="bg-white rounded-3xl p-5 shadow-sm border border-emerald-100 space-y-3">
+                    <h3 class="text-base font-bold text-emerald-900">2. Cara Mendeskripsikan Hewan</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs">
+                        <div onclick="speakText('Big, small, tall.', this)" class="speak-card p-3 rounded-2xl bg-slate-50 border border-slate-200">
+                            <p class="font-bold text-slate-800 mb-1">📏 Ukuran (Size)</p>
+                            <p class="text-emerald-700 font-semibold">big, small, tall</p>
+                        </div>
+                        <div onclick="speakText('Strong, fast, dangerous, cute.', this)" class="speak-card p-3 rounded-2xl bg-slate-50 border border-slate-200">
+                            <p class="font-bold text-slate-800 mb-1">✨ Sifat (Traits)</p>
+                            <p class="text-emerald-700 font-semibold">strong, fast, dangerous, cute</p>
+                        </div>
+                        <div onclick="speakText('Trunk, neck, tail, wings, claws.', this)" class="speak-card p-3 rounded-2xl bg-slate-50 border border-slate-200">
+                            <p class="font-bold text-slate-800 mb-1">🐾 Bagian Tubuh</p>
+                            <p class="text-emerald-700 font-semibold">trunk, neck, tail, wings, claws</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kalimat Fakta Simple Present Tense -->
+                <div class="bg-white rounded-3xl p-5 shadow-sm border border-emerald-100 space-y-3">
+                    <h3 class="text-base font-bold text-emerald-900">3. Kalimat Fakta Hewan (Simple Present Tense)</h3>
+                    <p class="text-xs text-slate-500">Klik kalimat untuk mendengar pengucapan yang tepat:</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                        <div onclick="speakText('Elephants eat grass.', this)" class="speak-card p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-between">
+                            <div>
+                                <p class="font-bold text-sm text-slate-800">🐘 Elephants eat grass.</p>
+                                <p class="text-xs text-slate-500">Gajah makan rumput.</p>
+                            </div>
+                            <i data-lucide="volume-2" class="w-4 h-4 text-emerald-700"></i>
+                        </div>
+                        <div onclick="speakText('Lions eat meat.', this)" class="speak-card p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-between">
+                            <div>
+                                <p class="font-bold text-sm text-slate-800">🦁 Lions eat meat.</p>
+                                <p class="text-xs text-slate-500">Singa makan daging.</p>
+                            </div>
+                            <i data-lucide="volume-2" class="w-4 h-4 text-emerald-700"></i>
+                        </div>
+                        <div onclick="speakText('Monkeys climb trees.', this)" class="speak-card p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-between">
+                            <div>
+                                <p class="font-bold text-sm text-slate-800">🐒 Monkeys climb trees.</p>
+                                <p class="text-xs text-slate-500">Monyet memanjat pohon.</p>
+                            </div>
+                            <i data-lucide="volume-2" class="w-4 h-4 text-emerald-700"></i>
+                        </div>
+                        <div onclick="speakText('Crocodiles live in rivers.', this)" class="speak-card p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-between">
+                            <div>
+                                <p class="font-bold text-sm text-slate-800">🐊 Crocodiles live in rivers.</p>
+                                <p class="text-xs text-slate-500">Buaya tinggal di sungai.</p>
+                            </div>
+                            <i data-lucide="volume-2" class="w-4 h-4 text-emerald-700"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- TAHAP 3: JELAJAH PETA & SIMULASI ARAH (APPLICATION)       -->
+        <!-- ========================================================= -->
+        <section id="section-aplikasi" class="tab-content hidden space-y-5">
+            <div class="bg-white rounded-3xl p-5 shadow-sm border border-emerald-100">
+                <div class="flex items-center justify-between mb-2">
+                    <h2 class="text-lg font-bold text-emerald-900">🗺️ Peta Interaktif Kebun Binatang</h2>
+                    <span class="text-xs bg-amber-100 text-amber-800 font-bold px-2.5 py-1 rounded-full">Simulasi Arah</span>
+                </div>
+                <p class="text-xs sm:text-sm text-slate-600 mb-4">
+                    Amati denah kebun binatang di bawah ini, lalu pilih tujuanmu untuk mendengar dan melihat petunjuk arah dari <strong>Entrance Gate (Pintu Masuk)</strong>!
+                </p>
+
+                <!-- Denah Visual Grid Kebun Binatang -->
+                <div class="bg-emerald-50 border-2 border-emerald-200 rounded-2xl p-3 sm:p-4 relative overflow-hidden">
+                    <!-- Baris Atas -->
+                    <div class="grid grid-cols-3 gap-2 mb-3">
+                        <div id="map-lion" class="map-node bg-white p-2.5 rounded-xl border-2 border-amber-300 text-center shadow-sm transition">
+                            <div class="text-2xl">🦁</div>
+                            <div class="text-[11px] font-bold text-slate-800 leading-tight mt-1">Lion Cage</div>
+                        </div>
+                        <div id="map-bird" class="map-node bg-white p-2.5 rounded-xl border-2 border-sky-300 text-center shadow-sm transition">
+                            <div class="text-2xl">🦜</div>
+                            <div class="text-[11px] font-bold text-slate-800 leading-tight mt-1">Bird House</div>
+                        </div>
+                        <div id="map-elephant" class="map-node bg-white p-2.5 rounded-xl border-2 border-slate-300 text-center shadow-sm transition">
+                            <div class="text-2xl">🐘</div>
+                            <div class="text-[11px] font-bold text-slate-800 leading-tight mt-1">Elephant Area</div>
+                        </div>
+                    </div>
+
+                    <!-- Jalan Utama Horizontal -->
+                    <div class="bg-amber-200/70 border border-dashed border-amber-500 rounded-lg py-1.5 px-3 text-center text-[10px] font-bold text-amber-900 tracking-wider uppercase mb-3">
+                        ⬅️ Main Zoo Path (Jalan Utama) ➡️
+                    </div>
+
+                    <!-- Baris Bawah -->
+                    <div class="grid grid-cols-3 gap-2 items-center">
+                        <div id="map-reptile" class="map-node bg-white p-2.5 rounded-xl border-2 border-green-400 text-center shadow-sm transition">
+                            <div class="text-2xl">🐊</div>
+                            <div class="text-[11px] font-bold text-slate-800 leading-tight mt-1">Reptile House</div>
+                        </div>
+                        <div class="bg-emerald-700 text-white p-2.5 rounded-xl text-center shadow-md border-2 border-emerald-900">
+                            <div class="text-xl">🚪</div>
+                            <div class="text-[11px] font-bold leading-tight mt-1">Entrance Gate</div>
+                            <div class="text-[9px] text-emerald-200">(Posisi Kamu)</div>
+                        </div>
+                        <div id="map-food" class="map-node bg-white p-2.5 rounded-xl border-2 border-rose-300 text-center shadow-sm transition">
+                            <div class="text-2xl">🍔</div>
+                            <div class="text-[11px] font-bold text-slate-800 leading-tight mt-1">Food Court</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pilihan Pertanyaan Siswa -->
+                <div class="mt-4 space-y-2">
+                    <p class="text-xs font-bold text-slate-700">Pilih tempat yang ingin kamu tuju (Klik untuk bersuara):</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <button onclick="askMapDirection('lion')" class="text-left p-3 rounded-xl bg-slate-50 hover:bg-amber-50 border border-slate-200 hover:border-amber-300 text-xs font-bold text-slate-800 flex items-center justify-between transition">
+                            <span>❓ "Where is the lion cage?"</span>
+                            <i data-lucide="volume-2" class="w-4 h-4 text-amber-600"></i>
+                        </button>
+                        <button onclick="askMapDirection('elephant')" class="text-left p-3 rounded-xl bg-slate-50 hover:bg-amber-50 border border-slate-200 hover:border-amber-300 text-xs font-bold text-slate-800 flex items-center justify-between transition">
+                            <span>❓ "Where is the elephant area?"</span>
+                            <i data-lucide="volume-2" class="w-4 h-4 text-amber-600"></i>
+                        </button>
+                        <button onclick="askMapDirection('reptile')" class="text-left p-3 rounded-xl bg-slate-50 hover:bg-amber-50 border border-slate-200 hover:border-amber-300 text-xs font-bold text-slate-800 flex items-center justify-between transition">
+                            <span>❓ "How can I get to the reptile house?"</span>
+                            <i data-lucide="volume-2" class="w-4 h-4 text-amber-600"></i>
+                        </button>
+                        <button onclick="askMapDirection('bird')" class="text-left p-3 rounded-xl bg-slate-50 hover:bg-amber-50 border border-slate-200 hover:border-amber-300 text-xs font-bold text-slate-800 flex items-center justify-between transition">
+                            <span>❓ "Where is the bird house?"</span>
+                            <i data-lucide="volume-2" class="w-4 h-4 text-amber-600"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Kotak Jawaban Pemandu Wisata -->
+                <div id="map-answer-box" class="mt-4 hidden bg-amber-50 border-2 border-amber-300 rounded-2xl p-4">
+                    <div class="flex items-start gap-3">
+                        <span class="text-2xl">🤠</span>
+                        <div class="flex-1">
+                            <p class="text-[11px] font-bold uppercase text-amber-800">Zoo Guide (Pemandu Wisata):</p>
+                            <p id="map-answer-en" class="text-sm sm:text-base font-bold text-slate-900 mt-0.5"></p>
+                            <p id="map-answer-id" class="text-xs text-slate-600 mt-1"></p>
+                        </div>
+                        <button id="replay-map-btn" class="p-2 bg-amber-400 text-amber-950 rounded-xl shadow-sm">
+                            <i data-lucide="volume-2" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tantangan Kuis Kontekstual -->
+            <div class="bg-white rounded-3xl p-5 shadow-sm border border-emerald-100">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-base font-bold text-emerald-900">🎯 Tantangan Pemahaman (Mini Quiz)</h3>
+                    <span id="quiz-score-badge" class="text-xs font-bold bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full">Skor: 0/4</span>
+                </div>
+                <div id="quiz-container" class="space-y-4">
+                    <!-- Soal kuis dirender oleh JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- TAHAP 4: REFLEKSI DIRI (REFLECTION)                       -->
+        <!-- ========================================================= -->
+        <section id="section-refleksi" class="tab-content hidden space-y-5">
+            <div class="bg-white rounded-3xl p-5 shadow-sm border border-emerald-100 space-y-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-2xl bg-purple-100 text-purple-700 flex items-center justify-center text-2xl">🌟</div>
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-900">Refleksi Pembelajaranku</h2>
+                        <p class="text-xs text-slate-500">Evaluasi pemahaman dan perasaanmu setelah belajar</p>
+                    </div>
+                </div>
+
+                <!-- 1. Ceklis Pemahaman Mandiri -->
+                <div class="space-y-2.5">
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">1. Bagaimana perasaanmu setelah mempelajari bab ini?</label>
+                    <div class="grid grid-cols-3 gap-2">
+                        <button onclick="selectMood(this, 'Sangat Paham & Senang 😄')" class="mood-btn p-3 rounded-2xl border-2 border-slate-200 text-center hover:border-emerald-400 transition">
+                            <div class="text-2xl mb-1">😄</div>
+                            <div class="text-xs font-bold text-slate-700">Sangat Paham</div>
+                        </button>
+                        <button onclick="selectMood(this, 'Cukup Paham 🙂')" class="mood-btn p-3 rounded-2xl border-2 border-slate-200 text-center hover:border-emerald-400 transition">
+                            <div class="text-2xl mb-1">🙂</div>
+                            <div class="text-xs font-bold text-slate-700">Cukup Paham</div>
+                        </button>
+                        <button onclick="selectMood(this, 'Perlu Latihan Lagi 🤔')" class="mood-btn p-3 rounded-2xl border-2 border-slate-200 text-center hover:border-emerald-400 transition">
+                            <div class="text-2xl mb-1">🤔</div>
+                            <div class="text-xs font-bold text-slate-700">Perlu Latihan</div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 2. Input Refleksi Bermakna -->
+                <div class="space-y-3 pt-2">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">2. Tuliskan 1 kalimat Bahasa Inggris baru yang paling kamu sukai hari ini:</label>
+                        <input type="text" id="ref-sentence" placeholder="Contoh: Elephants eat grass / Go straight and turn left" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:border-emerald-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">3. Apa sikap baik yang harus kita lakukan saat berkunjung ke kebun binatang?</label>
+                        <textarea id="ref-attitude" rows="2" placeholder="Contoh: Tidak membuang sampah sembarangan dan menyayangi hewan..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:border-emerald-500"></textarea>
+                    </div>
+                </div>
+
+                <button onclick="saveReflection()" class="w-full py-3.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-bold rounded-2xl shadow-md flex items-center justify-center gap-2 transition">
+                    <i data-lucide="award" class="w-5 h-5"></i>
+                    <span>Simpan Refleksi & Lihat Kartu Hasil Belajar</span>
+                </button>
+            </div>
+
+            <!-- Kartu Hasil Refleksi (Muncul setelah disimpan) -->
+            <div id="reflection-result" class="hidden bg-gradient-to-br from-amber-50 via-yellow-50 to-emerald-50 border-2 border-amber-300 rounded-3xl p-5 shadow-md space-y-3">
+                <div class="flex items-center justify-between">
+                    <span class="bg-amber-400 text-amber-950 text-xs font-bold px-3 py-1 rounded-full">🏆 Sertifikat Belajar Mandiri</span>
+                    <span class="text-xs font-semibold text-slate-500">Chapter 3: A Trip to the Zoo</span>
+                </div>
+                <p class="text-sm font-bold text-slate-800">Hebat! Kamu telah menyelesaikan pembelajaran mendalam hari ini.</p>
+                <div class="bg-white/80 rounded-2xl p-3.5 space-y-2 text-xs text-slate-700 border border-amber-200">
+                    <p><strong>Perasaan Belajar:</strong> <span id="res-mood">-</span></p>
+                    <p><strong>Kalimat Favoritku:</strong> <span id="res-sentence" class="text-emerald-700 font-bold">-</span></p>
+                    <p><strong>Komitmen Sikap Baik:</strong> <span id="res-attitude">-</span></p>
+                </div>
+                <button onclick="speakFavoriteSentence()" class="w-full py-2.5 bg-amber-400 hover:bg-amber-500 text-amber-950 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 transition">
+                    <i data-lucide="volume-2" class="w-4 h-4"></i>
+                    <span>Dengarkan Kalimat Favoritku</span>
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // Inisialisasi ikon Lucide
+        lucide.createIcons();
+
+        // ==========================================
+        // 1. DATA MATERI LENGKAP (SESUAI POSTER)
+        // ==========================================
+        const placesData = [
+            { en: "Entrance Gate", id: "Pintu Masuk", icon: "🚪" },
+            { en: "Ticket Booth", id: "Loket Tiket", icon: "🎟️" },
+            { en: "Information Center", id: "Pusat Informasi", icon: "ℹ️" },
+            { en: "Lion Cage", id: "Kandang Singa", icon: "🦁" },
+            { en: "Elephant Area", id: "Area Gajah", icon: "🐘" },
+            { en: "Monkey Cage", id: "Kandang Monyet", icon: "🐒" },
+            { en: "Bird House", id: "Rumah Burung", icon: "🦜" },
+            { en: "Reptile House", id: "Rumah Reptil", icon: "🐊" },
+            { en: "Toilet", id: "Toilet / Kamar Kecil", icon: "🚻" },
+            { en: "Food Court", id: "Pujasera / Tempat Makan", icon: "🍔" }
+        ];
+
+        const directionsData = [
+            { en: "Go straight.", id: "Jalan lurus.", icon: "⬆️" },
+            { en: "Turn left.", id: "Belok kiri.", icon: "⬅️" },
+            { en: "Turn right.", id: "Belok kanan.", icon: "➡️" },
+            { en: "It is next to...", id: "Itu di sebelah...", icon: "⏭️" },
+            { en: "It is between...", id: "Itu di antara...", icon: "↔️" },
+            { en: "It is in front of...", id: "Itu di depan...", icon: "🔽" },
+            { en: "It is behind...", id: "Itu di belakang...", icon: "🔼" }
+        ];
+
+        const prepositionsData = [
+            { en: "next to", id: "di sebelah" },
+            { en: "between", id: "di antara" },
+            { en: "behind", id: "di belakang" },
+            { en: "in front of", id: "di depan" },
+            { en: "near", id: "dekat" },
+            { en: "on", id: "di atas" },
+            { en: "under", id: "di bawah" }
+        ];
+
+        const dialogsData = [
+            { role: "Asking (Bertanya)", en: "Excuse me. Can you help me? Where is the tiger cage?", id: "Permisi. Bisakah kamu membantuku? Di mana kandang harimau?", color: "bg-white border-sky-200" },
+            { role: "Responding (Menjawab)", en: "Go straight and turn left. It is beside the elephant area.", id: "Jalan lurus lalu belok kiri. Lokasinya di samping area gajah.", color: "bg-emerald-50 border-emerald-200" },
+            { role: "Asking (Bertanya)", en: "How can I get to the reptile house?", id: "Bagaimana cara saya menuju ke rumah reptil?", color: "bg-white border-sky-200" },
+            { role: "Responding (Menjawab)", en: "Turn right. It is behind the ticket booth. You're welcome.", id: "Belok kanan. Lokasinya di belakang loket tiket. Sama-sama.", color: "bg-emerald-50 border-emerald-200" }
+        ];
+
+        const generalVocabData = [
+            { en: "entrance", id: "pintu masuk" },
+            { en: "exit", id: "pintu keluar" },
+            { en: "ticket", id: "tiket" },
+            { en: "map", id: "peta" },
+            { en: "visitor", id: "pengunjung" },
+            { en: "cage", id: "kandang" },
+            { en: "keeper", id: "penjaga hewan" },
+            { en: "feed", id: "memberi makan" },
+            { en: "animal show", id: "pertunjukan hewan" },
+            { en: "direction", id: "petunjuk arah" }
+        ];
+
+        const verbsData = [
+            { en: "eat", id: "makan" },
+            { en: "live", id: "tinggal" },
+            { en: "climb", id: "memanjat" },
+            { en: "fly", id: "terbang" },
+            { en: "swim", id: "berenang" },
+            { en: "walk", id: "berjalan" },
+            { en: "run", id: "berlari" },
+            { en: "turn", id: "berbelok" },
+            { en: "go", id: "pergi" },
+            { en: "feed", id: "memberi makan" }
+        ];
+
+        const mapDirectionsInfo = {
+            lion: {
+                q: "Where is the lion cage?",
+                en: "Go straight, then turn left. The lion cage is next to the bird house.",
+                id: "Jalan lurus, lalu belok kiri. Kandang singa berada di sebelah rumah burung."
+            },
+            elephant: {
+                q: "Where is the elephant area?",
+                en: "Go straight, then turn right. The elephant area is next to the bird house.",
+                id: "Jalan lurus, lalu belok kanan. Area gajah berada di sebelah rumah burung."
+            },
+            reptile: {
+                q: "How can I get to the reptile house?",
+                en: "From the entrance gate, turn left. It is in front of the lion cage.",
+                id: "Dari pintu masuk, belok kiri. Lokasinya berada di depan kandang singa."
+            },
+            bird: {
+                q: "Where is the bird house?",
+                en: "Just go straight! The bird house is between the lion cage and the elephant area.",
+                id: "Jalan lurus saja! Rumah burung berada di antara kandang singa dan area gajah."
+            }
+        };
+
+        const quizQuestions = [
+            {
+                q: "1. Lions eat meat. They are called...",
+                options: ["Herbivores", "Carnivores", "Omnivores"],
+                answer: 1,
+                explain: "Benar! Carnivores adalah hewan pemakan daging seperti singa (lions)."
+            },
+            {
+                q: "2. Berdasarkan peta di atas, posisi Bird House berada di .... Lion Cage dan Elephant Area.",
+                options: ["behind", "under", "between"],
+                answer: 2,
+                explain: "Tepat! 'Between' artinya di antara dua tempat."
+            },
+            {
+                q: "3. Apa bahasa Inggris dari 'Belok kanan'?",
+                options: ["Turn left", "Go straight", "Turn right"],
+                answer: 2,
+                explain: "Bagus! 'Turn right' artinya belok kanan."
+            },
+            {
+                q: "4. Monkeys _____ trees in the zoo.",
+                options: ["climb", "swim", "fly"],
+                answer: 0,
+                explain: "Hebat! Monyet memanjat (climb) pohon."
+            }
+        ];
+
+        // ==========================================
+        // 2. FUNGSI TEXT-TO-SPEECH (SUARA BAHASA INGGRIS)
+        // ==========================================
+        let speechRate = 0.9; // Kecepatan ideal untuk siswa SD
+        let activeCardEl = null;
+
+        function toggleSpeechRate() {
+            const label = document.getElementById('speedLabel');
+            if (speechRate === 0.9) {
+                speechRate = 0.65;
+                label.textContent = "Suara: Lambat";
+            } else {
+                speechRate = 0.9;
+                label.textContent = "Suara: Normal";
+            }
+        }
+
+        function speakText(text, element = null) {
+            if (!('speechSynthesis' in window)) {
+                showBannerText("Browser HP ini belum mendukung fitur suara otomatis.");
+                return;
+            }
+
+            // Hentikan suara sebelumnya
+            window.speechSynthesis.cancel();
+            if (activeCardEl) {
+                activeCardEl.classList.remove('speaking-active');
+            }
+
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US'; // Dialek Bahasa Inggris jelas
+            utterance.rate = speechRate;
+            utterance.pitch = 1.05;
+
+            // Cari suara bahasa Inggris terbaik yang tersedia di perangkat
+            const voices = window.speechSynthesis.getVoices();
+            const enVoice = voices.find(v => v.lang.includes('en-US') && v.name.includes('Google')) ||
+                            voices.find(v => v.lang.includes('en-US')) ||
+                            voices.find(v => v.lang.includes('en'));
+            if (enVoice) {
+                utterance.voice = enVoice;
+            }
+
+            // Efek visual saat berbicara
+            if (element) {
+                activeCardEl = element;
+                element.classList.add('speaking-active');
+            }
+
+            const banner = document.getElementById('speechBanner');
+            document.getElementById('speakingTextDisplay').textContent = text;
+            banner.classList.remove('translate-y-24', 'opacity-0');
+
+            utterance.onend = () => {
+                if (activeCardEl) activeCardEl.classList.remove('speaking-active');
+                banner.classList.add('translate-y-24', 'opacity-0');
+            };
+
+            utterance.onerror = () => {
+                if (activeCardEl) activeCardEl.classList.remove('speaking-active');
+                banner.classList.add('translate-y-24', 'opacity-0');
+            };
+
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function stopSpeech() {
+            window.speechSynthesis.cancel();
+            if (activeCardEl) activeCardEl.classList.remove('speaking-active');
+            document.getElementById('speechBanner').classList.add('translate-y-24', 'opacity-0');
+        }
+
+        // ==========================================
+        // 3. RENDER KONTEN DINAMIS
+        // ==========================================
+        function renderAllContent() {
+            // Render Places
+            const placesGrid = document.getElementById('places-grid');
+            placesGrid.innerHTML = placesData.map(item => `
+                <div onclick="speakText('${item.en}', this)" class="speak-card bg-white p-3.5 rounded-2xl border border-emerald-100 shadow-sm flex items-center justify-between gap-2">
+                    <div class="flex items-center gap-2.5 overflow-hidden">
+                        <span class="text-2xl shrink-0">${item.icon}</span>
+                        <div class="truncate">
+                            <p class="font-bold text-sm text-slate-800 truncate">${item.en}</p>
+                            <p class="text-xs text-slate-500 truncate">${item.id}</p>
+                        </div>
+                    </div>
+                    <i data-lucide="volume-2" class="w-4 h-4 text-emerald-600 shrink-0"></i>
+                </div>
+            `).join('');
+
+            // Render Directions
+            const dirGrid = document.getElementById('directions-grid');
+            dirGrid.innerHTML = directionsData.map(item => `
+                <div onclick="speakText('${item.en}', this)" class="speak-card bg-amber-50/70 p-3 rounded-2xl border border-amber-200 flex items-center justify-between">
+                    <div class="flex items-center gap-2.5">
+                        <span class="text-lg">${item.icon}</span>
+                        <div>
+                            <p class="font-bold text-sm text-slate-800">${item.en}</p>
+                            <p class="text-xs text-slate-600">${item.id}</p>
+                        </div>
+                    </div>
+                    <i data-lucide="volume-2" class="w-4 h-4 text-amber-600"></i>
+                </div>
+            `).join('');
+
+            // Render Prepositions
+            const prepGrid = document.getElementById('prepositions-grid');
+            prepGrid.innerHTML = prepositionsData.map(item => `
+                <div onclick="speakText('${item.en}', this)" class="speak-card bg-teal-50/70 p-3 rounded-2xl border border-teal-200 flex items-center justify-between">
+                    <div>
+                        <p class="font-bold text-sm text-teal-900">${item.en}</p>
+                        <p class="text-xs text-slate-600">${item.id}</p>
+                    </div>
+                    <i data-lucide="volume-2" class="w-4 h-4 text-teal-600"></i>
+                </div>
+            `).join('');
+
+            // Render Dialogs
+            const dialogList = document.getElementById('dialog-list');
+            dialogList.innerHTML = dialogsData.map(item => `
+                <div onclick="speakText(\`${item.en}\`, this)" class="speak-card ${item.color} p-3.5 rounded-2xl border flex items-center justify-between gap-3">
+                    <div>
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-sky-700">${item.role}</span>
+                        <p class="font-bold text-sm text-slate-800 mt-0.5">"${item.en}"</p>
+                        <p class="text-xs text-slate-500 mt-0.5">${item.id}</p>
+                    </div>
+                    <i data-lucide="volume-2" class="w-5 h-5 text-sky-600 shrink-0"></i>
+                </div>
+            `).join('');
+
+            // Render General Vocab
+            document.getElementById('general-vocab-grid').innerHTML = generalVocabData.map(item => `
+                <div onclick="speakText('${item.en}', this)" class="speak-card bg-indigo-50/60 p-3 rounded-2xl border border-indigo-100 flex items-center justify-between">
+                    <div>
+                        <p class="font-bold text-sm text-indigo-950 capitalize">${item.en}</p>
+                        <p class="text-xs text-slate-600">${item.id}</p>
+                    </div>
+                    <i data-lucide="volume-2" class="w-4 h-4 text-indigo-600"></i>
+                </div>
+            `).join('');
+
+            // Render Verbs
+            document.getElementById('verbs-grid').innerHTML = verbsData.map(item => `
+                <div onclick="speakText('${item.en}', this)" class="speak-card bg-emerald-50/60 p-3 rounded-2xl border border-emerald-100 flex items-center justify-between">
+                    <div>
+                        <p class="font-bold text-sm text-emerald-950 capitalize">${item.en}</p>
+                        <p class="text-xs text-slate-600">${item.id}</p>
+                    </div>
+                    <i data-lucide="volume-2" class="w-4 h-4 text-emerald-600"></i>
+                </div>
+            `).join('');
+
+            // Render Quiz
+            renderQuiz();
+            lucide.createIcons();
+        }
+
+        // ==========================================
+        // 4. NAVIGASI TAB & FILTER
+        // ==========================================
+        function switchTab(tabName) {
+            // Sembunyikan semua section
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById('section-' + tabName).classList.remove('hidden');
+
+            // Update styling tombol tab
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-white', 'text-emerald-800', 'shadow');
+                btn.classList.add('text-emerald-100');
+            });
+            const activeBtn = document.getElementById('tab-' + tabName);
+            activeBtn.classList.add('bg-white', 'text-emerald-800', 'shadow');
+            activeBtn.classList.remove('text-emerald-100');
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function filterVocab(cat) {
+            document.querySelectorAll('.vocab-category').forEach(el => el.classList.add('hidden'));
+            document.getElementById('cat-' + cat).classList.remove('hidden');
+
+            document.querySelectorAll('.vocab-filter').forEach(btn => {
+                btn.classList.remove('bg-emerald-600', 'text-white');
+                btn.classList.add('bg-white', 'text-slate-600', 'border', 'border-slate-200');
+            });
+            const activeFilter = document.getElementById('btn-' + cat);
+            activeFilter.classList.add('bg-emerald-600', 'text-white');
+            activeFilter.classList.remove('bg-white', 'text-slate-600', 'border', 'border-slate-200');
+        }
+
+        // ==========================================
+        // 5. INTERAKSI PETA & KUIS
+        // ==========================================
+        function askMapDirection(targetKey) {
+            const info = mapDirectionsInfo[targetKey];
+            
+            // Highlight node di peta
+            document.querySelectorAll('.map-node').forEach(node => {
+                node.classList.remove('ring-4', 'ring-amber-400', 'scale-105', 'bg-amber-50');
+            });
+            const targetNode = document.getElementById('map-' + targetKey);
+            if (targetNode) {
+                targetNode.classList.add('ring-4', 'ring-amber-400', 'scale-105', 'bg-amber-50');
+            }
+
+            // Tampilkan jawaban
+            const box = document.getElementById('map-answer-box');
+            box.classList.remove('hidden');
+            document.getElementById('map-answer-en').textContent = info.en;
+            document.getElementById('map-answer-id').textContent = info.id;
+
+            const replayBtn = document.getElementById('replay-map-btn');
+            replayBtn.onclick = () => speakText(info.en, box);
+
+            // Bacakan otomatis
+            speakText(info.en, box);
+        }
+
+        let quizScore = 0;
+        let answeredQuestions = new Set();
+
+        function renderQuiz() {
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = quizQuestions.map((item, qIdx) => `
+                <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2.5">
+                    <p class="text-xs sm:text-sm font-bold text-slate-800">${item.q}</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                        ${item.options.map((opt, oIdx) => `
+                            <button onclick="checkQuiz(${qIdx}, ${oIdx}, this)" class="quiz-opt-${qIdx} py-2 px-3 rounded-xl bg-white border border-slate-300 text-xs font-semibold text-slate-700 hover:bg-emerald-50 transition text-left sm:text-center">
+                                ${opt}
+                            </button>
+                        `).join('')}
+                    </div>
+                    <p id="quiz-feedback-${qIdx}" class="hidden text-xs font-semibold p-2 rounded-xl"></p>
+                </div>
+            `).join('');
+        }
+
+        function checkQuiz(qIdx, oIdx, btnEl) {
+            const qData = quizQuestions[qIdx];
+            const feedback = document.getElementById(`quiz-feedback-${qIdx}`);
+            const allBtns = document.querySelectorAll(`.quiz-opt-${qIdx}`);
+
+            // Bacakan pilihan kata dalam bahasa Inggris saat diklik
+            speakText(qData.options[oIdx]);
+
+            if (answeredQuestions.has(qIdx)) return;
+            answeredQuestions.add(qIdx);
+
+            allBtns.forEach(b => b.disabled = true);
+
+            if (oIdx === qData.answer) {
+                quizScore++;
+                btnEl.classList.remove('bg-white', 'border-slate-300');
+                btnEl.classList.add('bg-emerald-600', 'text-white', 'border-emerald-600');
+                feedback.textContent = "✅ " + qData.explain;
+                feedback.classList.remove('hidden');
+                feedback.classList.add('bg-emerald-100', 'text-emerald-900');
+            } else {
+                btnEl.classList.remove('bg-white', 'border-slate-300');
+                btnEl.classList.add('bg-rose-500', 'text-white', 'border-rose-500');
+                allBtns[qData.answer].classList.add('bg-emerald-100', 'border-emerald-500', 'text-emerald-900');
+                feedback.textContent = "❌ Kurang tepat. " + qData.explain;
+                feedback.classList.remove('hidden');
+                feedback.classList.add('bg-rose-100', 'text-rose-900');
+            }
+
+            document.getElementById('quiz-score-badge').textContent = `Skor: ${quizScore}/${quizQuestions.length}`;
+        }
+
+        // ==========================================
+        // 6. REFLEKSI DIRI SISWA
+        // ==========================================
+        let selectedMoodText = "Sangat Paham & Senang 😄";
+
+        function selectMood(btn, moodText) {
+            selectedMoodText = moodText;
+            document.querySelectorAll('.mood-btn').forEach(b => {
+                b.classList.remove('border-emerald-500', 'bg-emerald-50');
+                b.classList.add('border-slate-200');
+            });
+            btn.classList.remove('border-slate-200');
+            btn.classList.add('border-emerald-500', 'bg-emerald-50');
+        }
+
+        function saveReflection() {
+            const sentence = document.getElementById('ref-sentence').value.trim() || "Animals are our friends. We must love and protect them.";
+            const attitude = document.getElementById('ref-attitude').value.trim() || "Menyayangi hewan dan menjaga kebersihan kebun binatang.";
+
+            document.getElementById('res-mood').textContent = selectedMoodText;
+            document.getElementById('res-sentence').textContent = `"${sentence}"`;
+            document.getElementById('res-attitude').textContent = attitude;
+
+            const resultCard = document.getElementById('reflection-result');
+            resultCard.classList.remove('hidden');
+            resultCard.scrollIntoView({ behavior: 'smooth' });
+
+            speakText("Great job! " + sentence);
+        }
+
+        function speakFavoriteSentence() {
+            const sentence = document.getElementById('ref-sentence').value.trim() || "Animals are our friends. We must love and protect them.";
+            speakText(sentence);
+        }
+
+        // Jalankan saat halaman siap
+        window.onload = function() {
+            renderAllContent();
+            // Pancing pemuatan daftar suara di browser mobile
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.getVoices();
+            }
+        };
+    </script>
+</body>
+</html>
